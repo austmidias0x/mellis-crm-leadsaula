@@ -1,0 +1,10 @@
+node_modules
+.git
+*.log
+*.md
+.DS_Store
+dist
+setup.sh
+start.sh
+teste-backend.sh
+

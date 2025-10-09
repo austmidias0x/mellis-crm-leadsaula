@@ -1,4 +1,3 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import express from 'express';
 import cors from 'cors';
 import leadsRoutes from '../server/routes/leads.routes.js';
@@ -21,7 +20,5 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-export default (req: VercelRequest, res: VercelResponse) => {
-  return app(req as any, res as any);
-};
+export default app;
 
