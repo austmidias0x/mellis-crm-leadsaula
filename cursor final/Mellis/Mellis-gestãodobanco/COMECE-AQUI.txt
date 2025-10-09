@@ -1,0 +1,211 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                    🚀 MELLIS CRM - COMECE AQUI                ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Olá! Seu CRM está pronto com TODAS as funcionalidades solicitadas! ✅
+
+═══════════════════════════════════════════════════════════════
+⚡ INÍCIO RÁPIDO (3 PASSOS)
+═══════════════════════════════════════════════════════════════
+
+1️⃣ CONFIGURAR .ENV
+   Crie um arquivo .env na raiz com:
+
+   NEON_DATABASE_URL=seu_banco_de_dados
+   PORT=3001
+   NODE_ENV=development
+   CORS_ORIGIN=http://localhost:5173
+   JWT_SECRET=crie-uma-chave-secreta-forte
+   AUTH_PASSWORD=sua-senha-de-login
+
+2️⃣ EXECUTAR SQL NO BANCO
+   Abra o console do Neon e execute:
+   → migration-add-status.sql
+
+3️⃣ INICIAR APLICAÇÃO
+   Execute: ./start.sh
+   Ou manualmente em 2 terminais:
+   - Terminal 1: npm run dev
+   - Terminal 2: npm run dev:frontend
+
+🎉 Pronto! Acesse http://localhost:5173
+
+═══════════════════════════════════════════════════════════════
+✅ O QUE FOI IMPLEMENTADO
+═══════════════════════════════════════════════════════════════
+
+🔐 AUTENTICAÇÃO
+   ✓ Sistema de login com senha
+   ✓ Proteção de todas as páginas
+   ✓ JWT com expiração de 24h
+   ✓ Botão de logout
+
+📊 DASHBOARD
+   ✓ Estatísticas em tempo real
+   ✓ Gráficos de leads
+   ✓ Total e novos leads
+
+📋 LISTA DE LEADS
+   ✓ Busca por nome, email, telefone
+   ✓ Filtros avançados (profissão, região, dificuldade, datas)
+   ✓ Paginação
+   ✓ Visualização detalhada
+   ✓ Links para email e WhatsApp
+
+📊 KANBAN (MINI CRM)
+   ✓ 6 colunas de status
+   ✓ Drag & Drop funcional
+   ✓ Atualização automática no banco
+   ✓ Cards com todas as informações
+   ✓ Contador por coluna
+
+📥 EXPORTAÇÃO CSV
+   ✓ Exporta apenas leads FILTRADOS
+   ✓ Inclui campo de status
+   ✓ Compatível com Excel
+
+═══════════════════════════════════════════════════════════════
+📁 ARQUIVOS IMPORTANTES (LEIA)
+═══════════════════════════════════════════════════════════════
+
+Para começar:
+→ CHECKLIST.txt ................. Passo a passo de configuração
+→ .env.example .................. Exemplo de configuração
+
+Documentação:
+→ INSTALACAO-COMPLETA.txt ....... Guia completo de instalação
+→ RESUMO-IMPLEMENTACOES.txt ..... Todas as implementações
+→ INSTRUCOES.txt ................ Como usar o CRM
+→ API-EXAMPLES.txt .............. Exemplos de uso da API
+
+Banco de Dados:
+→ migration-add-status.sql ...... SQL OBRIGATÓRIO para executar
+
+Scripts:
+→ start.sh ...................... Inicia backend + frontend
+
+═══════════════════════════════════════════════════════════════
+🎯 FUNCIONALIDADES KANBAN
+═══════════════════════════════════════════════════════════════
+
+O Kanban possui 6 colunas para gerenciar o funil de vendas:
+
+📘 Novo .............. Leads recém-chegados
+📙 Em Contato ........ Leads sendo contatados
+📕 Qualificado ....... Leads qualificados
+📗 Negociação ........ Em processo de venda
+📗 Fechado ........... Venda realizada
+📕 Perdido ........... Oportunidade perdida
+
+Como usar:
+1. Acesse a aba "Kanban"
+2. Arraste os cards entre as colunas
+3. O status é atualizado automaticamente no banco
+
+═══════════════════════════════════════════════════════════════
+🔑 CREDENCIAIS PADRÃO
+═══════════════════════════════════════════════════════════════
+
+⚠️  Se você não alterou o .env, a senha padrão é:
+    
+    Senha: mellis123
+
+⚠️  IMPORTANTE: Altere AUTH_PASSWORD no .env para produção!
+
+═══════════════════════════════════════════════════════════════
+🆘 PROBLEMAS COMUNS
+═══════════════════════════════════════════════════════════════
+
+❌ Erro ao conectar no banco
+   → Verifique NEON_DATABASE_URL no .env
+
+❌ Kanban não funciona
+   → Execute migration-add-status.sql no banco
+
+❌ Senha não funciona
+   → Verifique AUTH_PASSWORD no .env
+   → Reinicie o backend
+
+❌ Token inválido
+   → Limpe o localStorage do navegador
+   → Faça login novamente
+
+Para mais soluções: INSTALACAO-COMPLETA.txt
+
+═══════════════════════════════════════════════════════════════
+📦 ESTRUTURA DO PROJETO
+═══════════════════════════════════════════════════════════════
+
+server/
+  ├── middleware/auth.middleware.ts .... Autenticação JWT
+  ├── routes/auth.routes.ts ............ Rotas de login
+  ├── routes/leads.routes.ts ........... Rotas de leads
+  └── services/lead.service.ts ......... Lógica de negócio
+
+src/
+  ├── context/AuthContext.tsx .......... Contexto de autenticação
+  ├── pages/Login.tsx .................. Página de login
+  ├── pages/Kanban.tsx ................. Visualização Kanban
+  ├── pages/Dashboard.tsx .............. Dashboard
+  └── pages/LeadsList.tsx .............. Lista de leads
+
+═══════════════════════════════════════════════════════════════
+🎨 NAVEGAÇÃO DO SISTEMA
+═══════════════════════════════════════════════════════════════
+
+Após fazer login, você verá no menu lateral:
+
+🏠 Dashboard .... Visão geral e estatísticas
+👥 Leads ........ Lista completa de leads
+📊 Kanban ....... Gerenciamento em colunas
+🚪 Sair ......... Logout do sistema
+
+═══════════════════════════════════════════════════════════════
+⚙️ TECNOLOGIAS UTILIZADAS
+═══════════════════════════════════════════════════════════════
+
+Backend:
+  • Node.js + Express + TypeScript
+  • PostgreSQL (Neon)
+  • JWT + Bcrypt
+  • CORS
+
+Frontend:
+  • React 18 + TypeScript
+  • React Router v6
+  • TanStack Query
+  • Lucide React
+  • Vite
+
+═══════════════════════════════════════════════════════════════
+📞 PRÓXIMOS PASSOS
+═══════════════════════════════════════════════════════════════
+
+1. [ ] Siga o CHECKLIST.txt
+2. [ ] Configure o .env
+3. [ ] Execute a migração SQL
+4. [ ] Inicie o sistema
+5. [ ] Faça login
+6. [ ] Teste todas as funcionalidades
+7. [ ] Pronto para usar! 🎉
+
+═══════════════════════════════════════════════════════════════
+✨ DICA PROFISSIONAL
+═══════════════════════════════════════════════════════════════
+
+Para uma experiência melhor:
+  • Use o Kanban para gerenciar o funil de vendas
+  • Aplique filtros antes de exportar CSV
+  • Configure uma senha forte no .env
+  • Treine a equipe comercial no uso do Kanban
+
+═══════════════════════════════════════════════════════════════
+
+           🚀 Tudo implementado e pronto para uso!
+           
+           Consulte CHECKLIST.txt para começar.
+           
+           Boa sorte com seu CRM! 💼
+
+═══════════════════════════════════════════════════════════════
+

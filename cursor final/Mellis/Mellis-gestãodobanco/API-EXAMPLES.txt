@@ -1,0 +1,265 @@
+═══════════════════════════════════════════════════════════════
+              MELLIS CRM - EXEMPLOS DE USO DA API
+═══════════════════════════════════════════════════════════════
+
+BASE_URL: http://localhost:3001/api
+
+───────────────────────────────────────────────────────────────
+1. LISTAR TODOS OS LEADS (sem filtros)
+───────────────────────────────────────────────────────────────
+
+GET /api/leads
+
+Resposta:
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "João Silva",
+      "email": "joao@example.com",
+      "whatsapp": "51999999999",
+      "profession": "veterinario",
+      "difficulty": "interpretacao",
+      "region": "poa",
+      "utm_source": "google",
+      "utm_medium": "cpc",
+      "utm_campaign": "campanha-2024",
+      "created_at": "2024-01-15T10:30:00Z",
+      ...
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 50,
+    "total": 150,
+    "totalPages": 3
+  }
+}
+
+───────────────────────────────────────────────────────────────
+2. BUSCAR LEADS (busca por nome, email ou telefone)
+───────────────────────────────────────────────────────────────
+
+GET /api/leads?search=joao
+
+GET /api/leads?search=joao@example.com
+
+GET /api/leads?search=51999999999
+
+───────────────────────────────────────────────────────────────
+3. FILTRAR POR PROFISSÃO
+───────────────────────────────────────────────────────────────
+
+GET /api/leads?profession=veterinario
+
+GET /api/leads?profession=tecnico
+
+GET /api/leads?profession=dono
+
+GET /api/leads?profession=outros
+
+───────────────────────────────────────────────────────────────
+4. FILTRAR POR REGIÃO
+───────────────────────────────────────────────────────────────
+
+GET /api/leads?region=serra
+
+GET /api/leads?region=poa
+
+GET /api/leads?region=interior
+
+GET /api/leads?region=outros-estados
+
+───────────────────────────────────────────────────────────────
+5. FILTRAR POR DIFICULDADE
+───────────────────────────────────────────────────────────────
+
+GET /api/leads?difficulty=interpretacao
+
+GET /api/leads?difficulty=escolha
+
+GET /api/leads?difficulty=coleta
+
+GET /api/leads?difficulty=demora
+
+GET /api/leads?difficulty=custo
+
+GET /api/leads?difficulty=nenhuma
+
+───────────────────────────────────────────────────────────────
+6. FILTRAR POR DATA
+───────────────────────────────────────────────────────────────
+
+Leads criados a partir de 01/01/2024:
+GET /api/leads?dateFrom=2024-01-01
+
+Leads criados até 31/12/2024:
+GET /api/leads?dateTo=2024-12-31
+
+Leads criados em período específico:
+GET /api/leads?dateFrom=2024-01-01&dateTo=2024-12-31
+
+───────────────────────────────────────────────────────────────
+7. MÚLTIPLOS FILTROS COMBINADOS
+───────────────────────────────────────────────────────────────
+
+Veterinários da Serra com dificuldade em interpretação:
+GET /api/leads?profession=veterinario&region=serra&difficulty=interpretacao
+
+Busca + Filtro de região:
+GET /api/leads?search=joao&region=poa
+
+───────────────────────────────────────────────────────────────
+8. PAGINAÇÃO
+───────────────────────────────────────────────────────────────
+
+Página 1 (padrão: 50 itens por página):
+GET /api/leads?page=1
+
+Página 2:
+GET /api/leads?page=2
+
+Customizar itens por página (100 itens):
+GET /api/leads?page=1&limit=100
+
+───────────────────────────────────────────────────────────────
+9. BUSCAR LEAD POR ID
+───────────────────────────────────────────────────────────────
+
+GET /api/leads/1
+
+Resposta:
+{
+  "id": 1,
+  "name": "João Silva",
+  "email": "joao@example.com",
+  "whatsapp": "51999999999",
+  "profession": "veterinario",
+  "difficulty": "interpretacao",
+  "region": "poa",
+  "utm_source": "google",
+  "utm_medium": "cpc",
+  "utm_campaign": "campanha-2024",
+  "user_agent": "Mozilla/5.0...",
+  "lgpd_consent": true,
+  "lgpd_consent_date": "2024-01-15T10:30:00Z",
+  "lgpd_consent_ip": "192.168.1.1",
+  "data_retention_date": "2026-01-15T10:30:00Z",
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z"
+}
+
+───────────────────────────────────────────────────────────────
+10. ESTATÍSTICAS
+───────────────────────────────────────────────────────────────
+
+GET /api/leads/stats
+
+Resposta:
+{
+  "total": 150,
+  "recentLeads": 25,
+  "byProfession": {
+    "veterinario": 80,
+    "tecnico": 40,
+    "dono": 20,
+    "outros": 10
+  },
+  "byRegion": {
+    "serra": 60,
+    "poa": 50,
+    "interior": 30,
+    "outros-estados": 10
+  },
+  "byDifficulty": {
+    "interpretacao": 50,
+    "escolha": 30,
+    "coleta": 25,
+    "demora": 20,
+    "custo": 15,
+    "nenhuma": 10
+  }
+}
+
+───────────────────────────────────────────────────────────────
+11. EXPORTAR CSV
+───────────────────────────────────────────────────────────────
+
+GET /api/leads/export/csv
+
+Resposta: arquivo CSV com todos os leads
+
+Headers:
+  Content-Type: text/csv; charset=utf-8
+  Content-Disposition: attachment; filename=leads-[timestamp].csv
+
+Campos incluídos:
+  ID, Nome, Email, WhatsApp, Profissão, Dificuldade, Região,
+  UTM Source, UTM Medium, UTM Campaign, Criado em, Atualizado em
+
+───────────────────────────────────────────────────────────────
+12. HEALTH CHECK
+───────────────────────────────────────────────────────────────
+
+GET /health
+
+Resposta:
+{
+  "status": "ok",
+  "timestamp": "2024-01-15T10:30:00.000Z"
+}
+
+═══════════════════════════════════════════════════════════════
+                    EXEMPLOS COM cURL
+═══════════════════════════════════════════════════════════════
+
+# Listar leads
+curl http://localhost:3001/api/leads
+
+# Buscar por nome
+curl "http://localhost:3001/api/leads?search=joao"
+
+# Filtrar veterinários
+curl "http://localhost:3001/api/leads?profession=veterinario"
+
+# Múltiplos filtros
+curl "http://localhost:3001/api/leads?profession=veterinario&region=serra"
+
+# Estatísticas
+curl http://localhost:3001/api/leads/stats
+
+# Exportar CSV
+curl http://localhost:3001/api/leads/export/csv -o leads.csv
+
+# Buscar por ID
+curl http://localhost:3001/api/leads/1
+
+═══════════════════════════════════════════════════════════════
+                  EXEMPLOS COM JavaScript/Fetch
+═══════════════════════════════════════════════════════════════
+
+// Listar todos os leads
+const response = await fetch('http://localhost:3001/api/leads');
+const data = await response.json();
+
+// Buscar com filtros
+const response = await fetch(
+  'http://localhost:3001/api/leads?profession=veterinario&region=serra'
+);
+const data = await response.json();
+
+// Estatísticas
+const response = await fetch('http://localhost:3001/api/leads/stats');
+const stats = await response.json();
+
+// Download CSV
+const response = await fetch('http://localhost:3001/api/leads/export/csv');
+const blob = await response.blob();
+const url = window.URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'leads.csv';
+a.click();
+
+═══════════════════════════════════════════════════════════════
+

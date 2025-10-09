@@ -1,0 +1,247 @@
+═══════════════════════════════════════════════════════════════
+        MELLIS CRM - GUIA DE INSTALAÇÃO E CONFIGURAÇÃO
+═══════════════════════════════════════════════════════════════
+
+📋 ÍNDICE
+-----------
+1. Pré-requisitos
+2. Instalação
+3. Configuração do Banco de Dados
+4. Configuração de Variáveis de Ambiente
+5. Executar o Projeto
+6. Acesso ao Sistema
+7. Funcionalidades Implementadas
+8. Solução de Problemas
+
+═══════════════════════════════════════════════════════════════
+1. PRÉ-REQUISITOS
+═══════════════════════════════════════════════════════════════
+
+- Node.js 18+ instalado
+- npm ou yarn
+- Acesso ao banco de dados PostgreSQL (Neon)
+- Navegador moderno (Chrome, Firefox, Safari, Edge)
+
+═══════════════════════════════════════════════════════════════
+2. INSTALAÇÃO
+═══════════════════════════════════════════════════════════════
+
+1. Instale as dependências:
+   npm install
+
+2. Caso não tenha executado o script de setup:
+   chmod +x setup.sh
+   ./setup.sh
+
+═══════════════════════════════════════════════════════════════
+3. CONFIGURAÇÃO DO BANCO DE DADOS
+═══════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANTE: Execute esta migração no seu banco de dados!
+
+Acesse o console do seu banco de dados PostgreSQL (Neon) e execute
+o arquivo: migration-add-status.sql
+
+Ou copie e cole o seguinte SQL:
+
+```sql
+ALTER TABLE leads 
+ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'novo';
+
+UPDATE leads 
+SET status = 'novo' 
+WHERE status IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
+```
+
+Este SQL adiciona a coluna 'status' necessária para o Kanban funcionar.
+
+═══════════════════════════════════════════════════════════════
+4. CONFIGURAÇÃO DE VARIÁVEIS DE AMBIENTE
+═══════════════════════════════════════════════════════════════
+
+Crie um arquivo .env na raiz do projeto com as seguintes variáveis:
+
+NEON_DATABASE_URL=postgresql://seu-usuario:sua-senha@seu-host/seu-banco
+PORT=3001
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:5173
+
+# Configurações de Autenticação
+JWT_SECRET=troque-por-uma-chave-secreta-forte
+AUTH_PASSWORD=sua-senha-de-acesso
+
+⚠️ IMPORTANTE:
+- Altere JWT_SECRET para uma chave aleatória e forte
+- Altere AUTH_PASSWORD para a senha que será usada no login
+- NUNCA compartilhe estas credenciais publicamente
+
+═══════════════════════════════════════════════════════════════
+5. EXECUTAR O PROJETO
+═══════════════════════════════════════════════════════════════
+
+Você precisa rodar DOIS terminais simultaneamente:
+
+TERMINAL 1 - Backend:
+   npm run dev
+
+TERMINAL 2 - Frontend:
+   npm run dev:frontend
+
+Aguarde ambos os servidores iniciarem completamente.
+
+═══════════════════════════════════════════════════════════════
+6. ACESSO AO SISTEMA
+═══════════════════════════════════════════════════════════════
+
+1. Abra o navegador e acesse: http://localhost:5173
+
+2. Você será redirecionado para a página de login
+
+3. Digite a senha configurada em AUTH_PASSWORD no .env
+
+4. Após o login, você terá acesso completo ao CRM
+
+Senha padrão (se não alterou no .env): mellis123
+
+⚠️ LEMBRE-SE: Altere a senha padrão para produção!
+
+═══════════════════════════════════════════════════════════════
+7. FUNCIONALIDADES IMPLEMENTADAS
+═══════════════════════════════════════════════════════════════
+
+✅ Sistema de Autenticação
+   - Login protegido por senha
+   - JWT Token com expiração de 24h
+   - Proteção de todas as rotas
+   - Logout com limpeza de sessão
+
+✅ Dashboard
+   - Estatísticas em tempo real
+   - Total de leads
+   - Leads novos (últimos 7 dias)
+   - Gráficos por profissão, região e dificuldade
+
+✅ Listagem de Leads
+   - Busca por nome, email ou telefone
+   - Filtros avançados (profissão, região, dificuldade, datas)
+   - Paginação
+   - Visualização detalhada
+   - Links diretos para email e WhatsApp
+   - Exportação CSV com filtros aplicados
+
+✅ Kanban (Mini CRM)
+   - 6 colunas: Novo, Em Contato, Qualificado, Negociação, Fechado, Perdido
+   - Drag & Drop para mover leads entre colunas
+   - Atualização automática no banco de dados
+   - Visualização rápida dos dados do lead
+   - Contador de leads por coluna
+
+✅ Exportação CSV
+   - Exporta apenas os leads filtrados
+   - Inclui todos os campos importantes
+   - Nome do arquivo com data automática
+   - Formato compatível com Excel
+
+✅ Design Responsivo
+   - Funciona em desktop, tablet e mobile
+   - Interface moderna e intuitiva
+   - Sidebar com navegação fácil
+
+═══════════════════════════════════════════════════════════════
+8. SOLUÇÃO DE PROBLEMAS
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA: Erro ao conectar no banco de dados
+SOLUÇÃO: 
+  - Verifique se NEON_DATABASE_URL está correto no .env
+  - Confirme que o banco está acessível
+  - Verifique se executou a migração SQL
+
+PROBLEMA: Erro "Token inválido" ao acessar
+SOLUÇÃO:
+  - Limpe o localStorage do navegador
+  - Faça login novamente
+  - Verifique se JWT_SECRET está definido no .env
+
+PROBLEMA: Senha não funciona no login
+SOLUÇÃO:
+  - Verifique AUTH_PASSWORD no .env
+  - Reinicie o servidor backend (npm run dev)
+  - Tente a senha padrão: mellis123
+
+PROBLEMA: Kanban não move os leads
+SOLUÇÃO:
+  - Verifique se executou a migração SQL
+  - Confirme que a coluna 'status' existe na tabela leads
+  - Verifique o console do navegador para erros
+
+PROBLEMA: Exportação CSV não funciona
+SOLUÇÃO:
+  - Verifique se há leads no banco de dados
+  - Confirme que o backend está rodando
+  - Verifique permissões de download no navegador
+
+PROBLEMA: Frontend não carrega
+SOLUÇÃO:
+  - Confirme que rodou 'npm run preview' (não 'npm run dev:frontend')
+  - Verifique se a porta 5173 está livre
+  - Acesse http://localhost:5173 (não localhost:3001)
+
+PROBLEMA: CORS Error
+SOLUÇÃO:
+  - Verifique CORS_ORIGIN no .env
+  - Deve ser http://localhost:5173
+  - Reinicie o backend após alterar
+
+═══════════════════════════════════════════════════════════════
+                    ESTRUTURA DO PROJETO
+═══════════════════════════════════════════════════════════════
+
+Backend:
+  server/
+    ├── index.ts                 - Servidor Express
+    ├── db.ts                    - Conexão PostgreSQL
+    ├── middleware/
+    │   └── auth.middleware.ts   - Autenticação JWT
+    ├── routes/
+    │   ├── auth.routes.ts       - Rotas de login
+    │   └── leads.routes.ts      - Rotas de leads
+    ├── services/
+    │   └── lead.service.ts      - Lógica de negócio
+    └── types/
+        └── lead.ts              - Tipos TypeScript
+
+Frontend:
+  src/
+    ├── App.tsx                  - Aplicação principal
+    ├── main.tsx                 - Entry point
+    ├── context/
+    │   └── AuthContext.tsx      - Contexto de autenticação
+    ├── components/
+    │   ├── Layout.tsx           - Layout com sidebar
+    │   ├── ProtectedRoute.tsx   - Proteção de rotas
+    │   └── StatsCard.tsx        - Card de estatística
+    ├── pages/
+    │   ├── Login.tsx            - Página de login
+    │   ├── Dashboard.tsx        - Dashboard principal
+    │   ├── LeadsList.tsx        - Lista de leads
+    │   ├── LeadDetail.tsx       - Detalhes do lead
+    │   └── Kanban.tsx           - Visualização Kanban
+    ├── services/
+    │   └── api.ts               - Client da API
+    └── types/
+        └── lead.ts              - Tipos TypeScript
+
+═══════════════════════════════════════════════════════════════
+                        SUPORTE
+═══════════════════════════════════════════════════════════════
+
+Para mais informações, consulte:
+- INSTRUCOES.txt - Instruções de uso da API
+- API-EXAMPLES.txt - Exemplos de uso da API
+- ESTRUTURA.txt - Estrutura completa do projeto
+
+═══════════════════════════════════════════════════════════════
+

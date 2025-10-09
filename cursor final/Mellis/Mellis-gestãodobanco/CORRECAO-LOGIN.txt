@@ -1,0 +1,142 @@
+═══════════════════════════════════════════════════════════════
+              🔧 CORREÇÃO DO PROBLEMA DE LOGIN
+═══════════════════════════════════════════════════════════════
+
+🐛 PROBLEMA IDENTIFICADO
+-----------
+O problema era que você estava usando:
+  npm run preview
+
+Mas deveria estar usando:
+  npm run dev:frontend
+
+O "preview" é para ver o build de produção e não tem o proxy
+configurado, por isso as requisições para /api não funcionavam!
+
+═══════════════════════════════════════════════════════════════
+✅ SOLUÇÃO (ESCOLHA UMA)
+═══════════════════════════════════════════════════════════════
+
+OPÇÃO 1 - Script Automático (RECOMENDADO):
+------------------------------------------
+Execute apenas:
+  ./start.sh
+
+Ele agora usa o comando correto automaticamente.
+
+
+OPÇÃO 2 - Manual (2 terminais):
+------------------------------------------
+Terminal 1 (Backend):
+  npm run dev
+
+Terminal 2 (Frontend):
+  npm run dev:frontend
+
+⚠️ IMPORTANTE: Use "dev:frontend" e NÃO "preview"
+
+
+OPÇÃO 3 - Se realmente quiser usar preview:
+------------------------------------------
+Fiz um ajuste no vite.config.ts para o preview também ter proxy.
+Mas ainda recomendo usar dev:frontend durante desenvolvimento.
+
+═══════════════════════════════════════════════════════════════
+🔍 COMO VERIFICAR SE ESTÁ FUNCIONANDO
+═══════════════════════════════════════════════════════════════
+
+1. Pare todos os servidores (Ctrl+C)
+
+2. Inicie novamente com o comando correto
+
+3. Abra o navegador em http://localhost:5173
+
+4. Abra o Console do Desenvolvedor (F12)
+
+5. Tente fazer login
+
+6. Você verá logs como:
+   ✓ "Tentando fazer login..."
+   ✓ "API: Chamando /api/auth/login..."
+   ✓ "API: Status da resposta: 200"
+   ✓ "API: Token recebido com sucesso"
+   ✓ "Login bem-sucedido, redirecionando..."
+
+Se der erro, você verá mensagens detalhadas no console.
+
+═══════════════════════════════════════════════════════════════
+📝 COMANDOS CORRETOS
+═══════════════════════════════════════════════════════════════
+
+❌ ERRADO:
+   npm run preview
+
+✅ CERTO:
+   npm run dev:frontend
+
+OU
+
+✅ CERTO:
+   ./start.sh
+
+═══════════════════════════════════════════════════════════════
+🔑 CREDENCIAL PADRÃO
+═══════════════════════════════════════════════════════════════
+
+Se você não alterou o .env, a senha é:
+  mellis123
+
+═══════════════════════════════════════════════════════════════
+🆘 AINDA TEM PROBLEMAS?
+═══════════════════════════════════════════════════════════════
+
+1. Verifique se o backend está rodando:
+   - Deve mostrar: "🚀 CRM Backend running on http://localhost:3001"
+
+2. Verifique se o .env está configurado:
+   - Deve ter todas as variáveis
+   - Principalmente: AUTH_PASSWORD e JWT_SECRET
+
+3. Teste o backend diretamente:
+   curl -X POST http://localhost:3001/api/auth/login \
+     -H "Content-Type: application/json" \
+     -d '{"password":"mellis123"}'
+
+   Deve retornar algo como:
+   {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
+
+4. Verifique o console do navegador (F12):
+   - Veja se há erros
+   - Veja os logs que adicionei
+
+5. Limpe o cache:
+   - Ctrl+Shift+R (Windows/Linux)
+   - Cmd+Shift+R (Mac)
+
+═══════════════════════════════════════════════════════════════
+📊 TESTE RÁPIDO
+═══════════════════════════════════════════════════════════════
+
+1. Pare tudo (Ctrl+C em todos os terminais)
+
+2. Execute:
+   ./start.sh
+
+3. Aguarde até ver:
+   "🚀 CRM Backend running on http://localhost:3001"
+   E o frontend estar disponível
+
+4. Acesse: http://localhost:5173
+
+5. Digite a senha: mellis123
+
+6. Clique em "Entrar"
+
+7. Deve redirecionar para o Dashboard! ✅
+
+═══════════════════════════════════════════════════════════════
+
+Agora deve funcionar perfeitamente! 🎉
+
+═══════════════════════════════════════════════════════════════
+

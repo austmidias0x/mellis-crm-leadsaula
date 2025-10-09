@@ -1,0 +1,136 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                 MELLIS CRM - QUICK START GUIDE                ║
+╚═══════════════════════════════════════════════════════════════╝
+
+⚡ INSTALAÇÃO RÁPIDA (3 passos)
+─────────────────────────────────────────────────────────────────
+
+1. Configure a conexão com o banco:
+   
+   Crie um arquivo .env na raiz do projeto:
+   
+   NEON_DATABASE_URL=postgresql://user:password@host.neon.tech/database
+   PORT=3001
+   NODE_ENV=development
+   CORS_ORIGIN=http://localhost:5173
+
+2. Instale as dependências:
+   
+   npm install
+
+3. Rode o projeto:
+   
+   Terminal 1 (Backend):  npm run dev
+   Terminal 2 (Frontend): npm run dev:frontend
+   
+   Ou use: npm run preview (para rodar o frontend em modo preview)
+
+
+🚀 ACESSE O CRM
+─────────────────────────────────────────────────────────────────
+
+Frontend: http://localhost:5173
+Backend:  http://localhost:3001
+
+
+📊 O QUE VOCÊ VAI ENCONTRAR
+─────────────────────────────────────────────────────────────────
+
+✓ Dashboard com estatísticas em tempo real
+  - Total de leads
+  - Leads recentes (últimos 7 dias)
+  - Distribuição por profissão
+  - Distribuição por região
+  - Dificuldades principais
+
+✓ Listagem de Leads
+  - Busca em tempo real
+  - Filtros avançados (profissão, região, dificuldade, data)
+  - Paginação
+  - Exportação para CSV
+
+✓ Detalhes do Lead
+  - Informações completas
+  - Links diretos para WhatsApp e Email
+  - Dados de marketing (UTMs)
+  - Histórico LGPD
+
+
+🔍 FILTROS DISPONÍVEIS
+─────────────────────────────────────────────────────────────────
+
+Profissão:
+  • Veterinário
+  • Técnico
+  • Dono
+  • Outros
+
+Dificuldade:
+  • Interpretação
+  • Escolha
+  • Coleta
+  • Demora
+  • Custo
+  • Nenhuma
+
+Região:
+  • Serra
+  • Porto Alegre
+  • Interior
+  • Outros Estados
+
+
+💾 EXPORTAÇÃO DE DADOS
+─────────────────────────────────────────────────────────────────
+
+Clique no botão "Exportar CSV" na página de leads para baixar
+todos os leads em formato CSV pronto para Excel/Google Sheets.
+
+O arquivo inclui:
+  • ID, Nome, Email, WhatsApp
+  • Profissão, Região, Dificuldade
+  • UTM Source, Medium, Campaign
+  • Datas de criação e atualização
+
+
+🔧 TROUBLESHOOTING
+─────────────────────────────────────────────────────────────────
+
+❌ Erro de conexão com banco:
+   → Verifique se o NEON_DATABASE_URL está correto no .env
+   → Confirme que o banco PostgreSQL está acessível
+
+❌ Frontend não carrega:
+   → Verifique se o backend está rodando na porta 3001
+   → Limpe o cache: rm -rf node_modules dist && npm install
+
+❌ Porta em uso:
+   → Mude a PORT no .env para outra porta
+   → Mate o processo: lsof -ti:3001 | xargs kill -9
+
+
+📱 COMPATIBILIDADE
+─────────────────────────────────────────────────────────────────
+
+✓ Desktop (Chrome, Firefox, Safari, Edge)
+✓ Tablet (iPad, Android)
+✓ Mobile (iPhone, Android) - Layout responsivo
+
+
+🎯 PRÓXIMOS PASSOS SUGERIDOS
+─────────────────────────────────────────────────────────────────
+
+[ ] Adicionar autenticação (JWT)
+[ ] Implementar sistema de notas nos leads
+[ ] Adicionar campo de status (novo, contatado, convertido)
+[ ] Criar campo de vendedor responsável
+[ ] Implementar filtro de leads atribuídos
+[ ] Adicionar gráficos de conversão
+[ ] Implementar histórico de ações no lead
+[ ] Adicionar notificações em tempo real
+
+
+══════════════════════════════════════════════════════════════════
+
+Desenvolvido com ❤️ usando React + TypeScript + PostgreSQL
+

@@ -1,0 +1,135 @@
+═══════════════════════════════════════════════════════════════
+                    MELLIS CRM - INSTRUÇÕES DE USO
+═══════════════════════════════════════════════════════════════
+
+📋 DESCRIÇÃO
+-----------
+CRM completo para gestão de leads com:
+- Dashboard com estatísticas em tempo real
+- Listagem de leads com filtros avançados
+- Busca por nome, email ou telefone
+- Exportação de leads para CSV
+- Visualização detalhada de cada lead
+- Interface moderna e responsiva
+
+🔧 INSTALAÇÃO
+-----------
+1. Execute o script de setup:
+   chmod +x setup.sh
+   ./setup.sh
+
+2. Configure o arquivo .env:
+   NEON_DATABASE_URL=postgresql://user:password@host/database
+   PORT=3001
+   NODE_ENV=development
+   CORS_ORIGIN=http://localhost:5173
+
+3. Instale as dependências (se não rodou o setup.sh):
+   npm install
+
+🚀 COMO RODAR
+-----------
+Terminal 1 - Backend:
+   npm run dev
+
+Terminal 2 - Frontend:
+   npm run preview
+
+Acesse: http://localhost:5173
+
+📊 ENDPOINTS DA API
+-----------
+GET  /api/leads                - Lista todos os leads (com filtros)
+GET  /api/leads/:id            - Busca lead por ID
+GET  /api/leads/stats          - Estatísticas gerais
+GET  /api/leads/export/csv     - Exporta leads em CSV
+
+Filtros disponíveis na query string:
+- search: busca por nome, email ou telefone
+- profession: veterinario, tecnico, dono, outros
+- difficulty: interpretacao, escolha, coleta, demora, custo, nenhuma
+- region: serra, poa, interior, outros-estados
+- utm_campaign: filtro por campanha
+- dateFrom: data inicial (YYYY-MM-DD)
+- dateTo: data final (YYYY-MM-DD)
+- page: número da página (default: 1)
+- limit: itens por página (default: 50)
+
+🎨 FUNCIONALIDADES DO CRM
+-----------
+✓ Dashboard com cards de estatísticas
+✓ Gráficos de distribuição por profissão, região e dificuldade
+✓ Contagem de leads recentes (últimos 7 dias)
+✓ Listagem completa de leads com paginação
+✓ Busca em tempo real
+✓ Filtros avançados (profissão, região, dificuldade, data)
+✓ Exportação completa para CSV
+✓ Visualização detalhada de cada lead
+✓ Links diretos para email e WhatsApp
+✓ Interface responsiva (mobile-friendly)
+
+🏗️ ARQUITETURA
+-----------
+Backend (TypeScript + Express):
+- server/index.ts           - Servidor principal
+- server/db.ts              - Conexão com PostgreSQL
+- server/services/          - Lógica de negócio (SOLID)
+- server/routes/            - Rotas da API
+- server/types/             - Tipos TypeScript
+
+Frontend (React + TypeScript):
+- src/App.tsx               - Aplicação principal
+- src/pages/                - Páginas (Dashboard, LeadsList, LeadDetail)
+- src/components/           - Componentes reutilizáveis
+- src/services/api.ts       - Client da API
+- src/types/                - Tipos TypeScript
+
+📦 DEPENDÊNCIAS PRINCIPAIS
+-----------
+Backend:
+- express: Framework web
+- pg: Client PostgreSQL
+- cors: CORS middleware
+- dotenv: Variáveis de ambiente
+- zod: Validação de schemas
+
+Frontend:
+- react: UI library
+- react-router-dom: Roteamento
+- @tanstack/react-query: State management
+- lucide-react: Ícones modernos
+
+Dev:
+- typescript: Type safety
+- vite: Build tool
+- tsx: TypeScript execution
+
+🔐 SEGURANÇA
+-----------
+- Todas as queries usam prepared statements (proteção contra SQL injection)
+- Headers de segurança configurados
+- CORS configurado por ambiente
+- Validação de tipos com Zod
+- Conformidade LGPD
+
+💾 BANCO DE DADOS
+-----------
+O app se conecta ao banco PostgreSQL existente.
+Não cria ou modifica tabelas - apenas lê os dados.
+
+Tabela utilizada: leads
+
+🎯 BOAS PRÁTICAS IMPLEMENTADAS
+-----------
+✓ SOLID principles
+✓ Separation of concerns
+✓ Type safety com TypeScript
+✓ Clean code
+✓ Component composition
+✓ Custom hooks pattern
+✓ Error handling
+✓ Loading states
+✓ Responsive design
+
+═══════════════════════════════════════════════════════════════
+

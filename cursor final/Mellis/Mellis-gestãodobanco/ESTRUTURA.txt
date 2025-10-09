@@ -1,0 +1,93 @@
+Mellis-gestãodobanco/
+│
+├── 📁 server/                      # Backend (Node.js + Express + TypeScript)
+│   ├── index.ts                    # Entry point do servidor
+│   ├── db.ts                       # Configuração do PostgreSQL
+│   │
+│   ├── 📁 types/
+│   │   └── lead.ts                 # Interfaces TypeScript
+│   │
+│   ├── 📁 services/
+│   │   └── lead.service.ts         # Lógica de negócio (SOLID)
+│   │
+│   └── 📁 routes/
+│       └── leads.routes.ts         # Rotas da API REST
+│
+├── 📁 src/                         # Frontend (React + TypeScript)
+│   ├── main.tsx                    # Entry point do React
+│   ├── App.tsx                     # Aplicação principal + rotas
+│   ├── index.css                   # Estilos globais
+│   │
+│   ├── 📁 types/
+│   │   └── lead.ts                 # Interfaces TypeScript
+│   │
+│   ├── 📁 services/
+│   │   └── api.ts                  # Client da API REST
+│   │
+│   ├── 📁 components/
+│   │   ├── Layout.tsx              # Layout principal com sidebar
+│   │   ├── Layout.css
+│   │   ├── StatsCard.tsx           # Card de estatísticas
+│   │   └── StatsCard.css
+│   │
+│   └── 📁 pages/
+│       ├── Dashboard.tsx           # Dashboard com estatísticas
+│       ├── Dashboard.css
+│       ├── LeadsList.tsx           # Lista de leads com filtros
+│       ├── LeadsList.css
+│       ├── LeadDetail.tsx          # Detalhes do lead
+│       └── LeadDetail.css
+│
+├── 📄 index.html                   # HTML base
+├── 📄 package.json                 # Dependências do projeto
+├── 📄 tsconfig.json                # Config TypeScript (frontend)
+├── 📄 tsconfig.node.json           # Config TypeScript (backend)
+├── 📄 vite.config.ts               # Config Vite
+├── 📄 .gitignore                   # Arquivos ignorados pelo git
+├── 📄 .env.example                 # Exemplo de variáveis de ambiente
+├── 📄 setup.sh                     # Script de instalação
+├── 📄 INSTRUCOES.txt               # Instruções de uso
+└── 📄 ESTRUTURA.txt                # Este arquivo
+
+═══════════════════════════════════════════════════════════════
+                        STACK TECNOLÓGICA
+═══════════════════════════════════════════════════════════════
+
+Backend:
+  • Node.js + Express      - Framework web
+  • TypeScript             - Type safety
+  • PostgreSQL (Neon)      - Banco de dados
+  • pg                     - Client PostgreSQL
+  • CORS                   - Cross-origin resource sharing
+  • tsx                    - TypeScript execution
+
+Frontend:
+  • React 18               - UI library
+  • TypeScript             - Type safety
+  • Vite                   - Build tool
+  • React Router           - Roteamento
+  • TanStack Query         - State management
+  • Lucide React           - Ícones modernos
+  • CSS Modules            - Estilos
+
+═══════════════════════════════════════════════════════════════
+                      ROTAS DO BACKEND
+═══════════════════════════════════════════════════════════════
+
+GET  /health                    - Health check
+GET  /api/leads                 - Lista leads (com filtros)
+GET  /api/leads/stats           - Estatísticas
+GET  /api/leads/export/csv      - Exporta CSV
+GET  /api/leads/:id             - Busca lead por ID
+
+═══════════════════════════════════════════════════════════════
+                     ROTAS DO FRONTEND
+═══════════════════════════════════════════════════════════════
+
+/                               - Redireciona para /dashboard
+/dashboard                      - Dashboard com estatísticas
+/leads                          - Lista de leads
+/leads/:id                      - Detalhes do lead
+
+═══════════════════════════════════════════════════════════════
+

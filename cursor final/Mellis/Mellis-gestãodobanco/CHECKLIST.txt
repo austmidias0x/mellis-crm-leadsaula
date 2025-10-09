@@ -1,0 +1,182 @@
+═══════════════════════════════════════════════════════════════
+               MELLIS CRM - CHECKLIST DE CONFIGURAÇÃO
+═══════════════════════════════════════════════════════════════
+
+Siga este checklist para configurar e executar o CRM corretamente.
+
+═══════════════════════════════════════════════════════════════
+PASSO 1: DEPENDÊNCIAS
+═══════════════════════════════════════════════════════════════
+
+[ ] Instalar dependências:
+    npm install
+
+═══════════════════════════════════════════════════════════════
+PASSO 2: ARQUIVO .ENV
+═══════════════════════════════════════════════════════════════
+
+[ ] Criar arquivo .env na raiz do projeto
+
+[ ] Adicionar as seguintes variáveis:
+
+    NEON_DATABASE_URL=postgresql://seu-usuario:senha@host/banco
+    PORT=3001
+    NODE_ENV=development
+    CORS_ORIGIN=http://localhost:5173
+    JWT_SECRET=sua-chave-secreta-forte-aleatoria
+    AUTH_PASSWORD=sua-senha-de-acesso
+
+[ ] ⚠️ IMPORTANTE: Alterar JWT_SECRET para uma chave forte
+[ ] ⚠️ IMPORTANTE: Definir AUTH_PASSWORD (esta será a senha de login)
+
+Exemplo de JWT_SECRET forte:
+  JWT_SECRET=7k2n9p4m8q1w5e3r6t0y2u8i5o7p4a1s
+
+Exemplo de AUTH_PASSWORD:
+  AUTH_PASSWORD=SuaSenhaForte123!
+
+═══════════════════════════════════════════════════════════════
+PASSO 3: MIGRAÇÃO DO BANCO DE DADOS
+═══════════════════════════════════════════════════════════════
+
+[ ] Acessar o console do PostgreSQL (Neon Dashboard)
+
+[ ] Abrir o arquivo: migration-add-status.sql
+
+[ ] Copiar o conteúdo do SQL
+
+[ ] Executar no console do Neon
+
+[ ] Verificar se a coluna 'status' foi criada:
+    SELECT status FROM leads LIMIT 1;
+
+⚠️ Esta migração é OBRIGATÓRIA para o Kanban funcionar!
+
+═══════════════════════════════════════════════════════════════
+PASSO 4: EXECUTAR O PROJETO
+═══════════════════════════════════════════════════════════════
+
+Opção A - Script Automático:
+[ ] ./start.sh
+
+Opção B - Manual (2 terminais):
+[ ] Terminal 1: npm run dev
+[ ] Terminal 2: npm run dev:frontend
+
+[ ] Aguardar ambos os servidores iniciarem
+
+═══════════════════════════════════════════════════════════════
+PASSO 5: ACESSAR O SISTEMA
+═══════════════════════════════════════════════════════════════
+
+[ ] Abrir navegador
+
+[ ] Acessar: http://localhost:5173
+
+[ ] Fazer login com a senha definida em AUTH_PASSWORD
+
+[ ] ✅ SUCESSO! O CRM está funcionando
+
+═══════════════════════════════════════════════════════════════
+VERIFICAÇÃO DE FUNCIONALIDADES
+═══════════════════════════════════════════════════════════════
+
+Teste as seguintes funcionalidades:
+
+Dashboard:
+[ ] Ver estatísticas gerais
+[ ] Ver gráficos de leads
+
+Leads:
+[ ] Ver lista de leads
+[ ] Usar busca
+[ ] Aplicar filtros
+[ ] Exportar CSV (com filtros)
+[ ] Clicar em um lead para ver detalhes
+
+Kanban:
+[ ] Ver leads organizados em colunas
+[ ] Arrastar um lead para outra coluna
+[ ] Verificar se o status foi atualizado
+
+Autenticação:
+[ ] Fazer logout
+[ ] Tentar acessar sem login (deve redirecionar)
+[ ] Fazer login novamente
+
+═══════════════════════════════════════════════════════════════
+SOLUÇÃO RÁPIDA DE PROBLEMAS
+═══════════════════════════════════════════════════════════════
+
+❌ Erro de conexão com banco:
+   → Verificar NEON_DATABASE_URL no .env
+
+❌ Senha não funciona:
+   → Verificar AUTH_PASSWORD no .env
+   → Reiniciar backend (npm run dev)
+
+❌ Kanban não funciona:
+   → Executar migration-add-status.sql
+
+❌ CORS Error:
+   → Verificar CORS_ORIGIN=http://localhost:5173 no .env
+
+❌ Token inválido:
+   → Limpar localStorage do navegador
+   → Fazer login novamente
+
+═══════════════════════════════════════════════════════════════
+PORTAS UTILIZADAS
+═══════════════════════════════════════════════════════════════
+
+Backend:  http://localhost:3001
+Frontend: http://localhost:5173
+
+Certifique-se de que estas portas estão livres.
+
+═══════════════════════════════════════════════════════════════
+PRÓXIMOS PASSOS (OPCIONAL)
+═══════════════════════════════════════════════════════════════
+
+Para uso em produção:
+[ ] Alterar NODE_ENV para 'production'
+[ ] Usar senha JWT_SECRET forte e única
+[ ] Alterar AUTH_PASSWORD para senha forte
+[ ] Configurar CORS_ORIGIN com domínio real
+[ ] Fazer build: npm run build
+[ ] Deploy do backend e frontend
+
+═══════════════════════════════════════════════════════════════
+CREDENCIAIS PADRÃO
+═══════════════════════════════════════════════════════════════
+
+⚠️ APENAS PARA DESENVOLVIMENTO ⚠️
+
+Se você NÃO alterou o .env, as credenciais padrão são:
+  Senha: mellis123
+
+ALTERE ESTAS CREDENCIAIS PARA PRODUÇÃO!
+
+═══════════════════════════════════════════════════════════════
+ARQUIVOS IMPORTANTES
+═══════════════════════════════════════════════════════════════
+
+📋 LEIA ESTES ARQUIVOS:
+
+  ✓ INSTALACAO-COMPLETA.txt - Guia completo de instalação
+  ✓ RESUMO-IMPLEMENTACOES.txt - O que foi implementado
+  ✓ INSTRUCOES.txt - Como usar o CRM
+  ✓ API-EXAMPLES.txt - Exemplos de uso da API
+  ✓ migration-add-status.sql - SQL obrigatório
+
+═══════════════════════════════════════════════════════════════
+                         ✅ CONCLUÍDO
+═══════════════════════════════════════════════════════════════
+
+Quando todos os itens estiverem marcados, o CRM estará
+totalmente configurado e pronto para uso! 🚀
+
+Dúvidas? Consulte INSTALACAO-COMPLETA.txt
+
+═══════════════════════════════════════════════════════════════
+
