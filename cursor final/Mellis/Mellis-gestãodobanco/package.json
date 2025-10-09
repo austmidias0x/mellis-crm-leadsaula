@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "tsx watch server/index.ts",
     "dev:frontend": "vite",
-    "build": "tsc && vite build",
-    "vercel-build": "vite build",
+    "build": "vite build",
     "build:backend": "tsc -p tsconfig.node.json",
     "start": "node dist/index.js",
     "preview": "vite preview",
