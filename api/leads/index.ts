@@ -50,11 +50,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 50,
     };
 
+    console.log('=== Fetching Leads ===');
+    console.log('Filters:', filters);
+    
     const result = await leadService.getAllLeads(filters);
+    
+    console.log('Leads found:', result.data.length);
+    console.log('Total in DB:', result.pagination.total);
+    
     return res.status(200).json(result);
-  } catch (error) {
-    console.error('Error fetching leads:', error);
-    return res.status(500).json({ error: 'Failed to fetch leads' });
+  } catch (error: any) {
+    console.error('ERROR fetching leads:', error);
+    return res.status(500).json({ 
+      error: 'Failed to fetch leads',
+      message: error.message,
+      stack: error.stack
+    });
   }
 }
 

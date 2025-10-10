@@ -6,10 +6,15 @@ dotenv.config();
 const { Pool } = pg;
 
 const pool = new Pool({
-  connectionString: process.env.NEON_DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || process.env.NEON_DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },
+});
+
+console.log('Database connection configured:', {
+  hasUrl: !!(process.env.DATABASE_URL || process.env.NEON_DATABASE_URL),
+  urlPrefix: (process.env.DATABASE_URL || process.env.NEON_DATABASE_URL || '').substring(0, 20)
 });
 
 export async function query<T = any>(text: string, params?: any[]): Promise<{ rows: T[] }> {

@@ -37,11 +37,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log('=== Fetching Stats ===');
     const stats = await leadService.getStats();
+    console.log('Stats retrieved:', stats);
     return res.status(200).json(stats);
-  } catch (error) {
-    console.error('Error fetching stats:', error);
-    return res.status(500).json({ error: 'Failed to fetch stats' });
+  } catch (error: any) {
+    console.error('ERROR fetching stats:', error);
+    return res.status(500).json({ 
+      error: 'Failed to fetch stats',
+      message: error.message,
+      stack: error.stack
+    });
   }
 }
 
