@@ -1,6 +1,12 @@
 {
   "buildCommand": "cd 'cursor final/Mellis/Mellis-gestãodobanco' && npm run build",
   "outputDirectory": "cursor final/Mellis/Mellis-gestãodobanco/dist",
-  "installCommand": "cd 'cursor final/Mellis/Mellis-gestãodobanco' && npm install"
+  "installCommand": "cd 'cursor final/Mellis/Mellis-gestãodobanco' && npm install",
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
 
