@@ -5,6 +5,7 @@
   "dependencies": {
     "@vercel/node": "^5.3.26",
     "bcryptjs": "^3.0.2",
+    "dotenv": "^16.3.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
     "zod": "^3.22.4"
