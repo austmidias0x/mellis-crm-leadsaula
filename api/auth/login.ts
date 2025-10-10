@@ -19,10 +19,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    console.log('Login attempt - Request body:', req.body);
+    // Parse body if it's a string
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    console.log('Login attempt - Request body:', body);
     console.log('Expected password:', AUTH_PASSWORD);
     
-    const { password } = req.body;
+    const { password } = body;
 
     if (!password) {
       console.log('No password provided');

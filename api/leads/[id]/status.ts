@@ -37,9 +37,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Parse body if it's a string
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
     const { id } = req.query;
     const leadId = parseInt(id as string, 10);
-    const { status } = req.body;
+    const { status } = body;
 
     if (!status) {
       return res.status(400).json({ error: 'Status is required' });
