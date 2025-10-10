@@ -3,9 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-change-this';
-const AUTH_PASSWORD_HASH = process.env.AUTH_PASSWORD 
-  ? bcrypt.hashSync(process.env.AUTH_PASSWORD, 10)
-  : bcrypt.hashSync('mellis123', 10);
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD || 'mellis123';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Senha não fornecida' });
     }
 
-    const isValid = await bcrypt.compare(password, AUTH_PASSWORD_HASH);
+    const isValid = password === AUTH_PASSWORD;
 
     if (!isValid) {
       return res.status(401).json({ error: 'Senha incorreta' });
