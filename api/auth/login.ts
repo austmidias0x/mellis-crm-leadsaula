@@ -19,15 +19,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log('Login attempt - Request body:', req.body);
+    console.log('Expected password:', AUTH_PASSWORD);
+    
     const { password } = req.body;
 
     if (!password) {
+      console.log('No password provided');
       return res.status(400).json({ error: 'Senha não fornecida' });
     }
+
+    console.log('Received password:', password);
+    console.log('Password match:', password === AUTH_PASSWORD);
 
     const isValid = password === AUTH_PASSWORD;
 
     if (!isValid) {
+      console.log('Invalid password');
       return res.status(401).json({ error: 'Senha incorreta' });
     }
 
@@ -37,10 +45,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       { expiresIn: '24h' }
     );
 
+    console.log('Login successful, token generated');
     return res.status(200).json({ token });
   } catch (error) {
     console.error('Error during login:', error);
-    return res.status(500).json({ error: 'Erro ao fazer login' });
+    return res.status(500).json({ error: 'Erro ao fazer login', details: String(error) });
   }
 }
 
