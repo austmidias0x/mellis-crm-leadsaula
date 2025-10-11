@@ -85,6 +85,22 @@
   opacity: 0.8;
 }
 
+.kanban-card.dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+  cursor: grabbing;
+}
+
+.kanban-column.drag-over {
+  background: #e0f2fe;
+  border: 2px dashed #3b82f6;
+  transition: all 0.2s;
+}
+
+.kanban-column.drag-over .kanban-cards {
+  background: rgba(59, 130, 246, 0.05);
+}
+
 .kanban-card-header {
   display: flex;
   align-items: flex-start;

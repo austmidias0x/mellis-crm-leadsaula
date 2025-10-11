@@ -17,6 +17,7 @@ const KANBAN_COLUMNS = [
 export default function Kanban() {
   const queryClient = useQueryClient();
   const [draggedLead, setDraggedLead] = useState<Lead | null>(null);
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['leads', { limit: 1000 }],
@@ -38,19 +39,40 @@ export default function Kanban() {
     return acc;
   }, {} as Record<string, Lead[]>);
 
-  const handleDragStart = (lead: Lead) => {
+  const handleDragStart = (e: React.DragEvent, lead: Lead) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', lead.id.toString());
     setDraggedLead(lead);
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, columnId: string) => {
     e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverColumn !== columnId) {
+      setDragOverColumn(columnId);
+    }
   };
 
-  const handleDrop = (columnId: string) => {
-    if (draggedLead && draggedLead.status !== columnId) {
-      updateStatusMutation.mutate({ id: draggedLead.id, status: columnId });
+  const handleDrop = (e: React.DragEvent, columnId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (draggedLead) {
+      const currentStatus = draggedLead.status || 'novo';
+      
+      if (currentStatus !== columnId) {
+        updateStatusMutation.mutate({ id: draggedLead.id, status: columnId });
+      }
     }
+    
     setDraggedLead(null);
+    setDragOverColumn(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedLead(null);
+    setDragOverColumn(null);
   };
 
   const formatPhone = (phone: string) => {
@@ -92,9 +114,9 @@ export default function Kanban() {
         {KANBAN_COLUMNS.map((column) => (
           <div
             key={column.id}
-            className="kanban-column"
-            onDragOver={handleDragOver}
-            onDrop={() => handleDrop(column.id)}
+            className={`kanban-column ${dragOverColumn === column.id ? 'drag-over' : ''}`}
+            onDragOver={(e) => handleDragOver(e, column.id)}
+            onDrop={(e) => handleDrop(e, column.id)}
           >
             <div className="kanban-column-header" style={{ borderTopColor: column.color }}>
               <h3>{column.title}</h3>
@@ -107,9 +129,10 @@ export default function Kanban() {
               {groupedLeads[column.id]?.map((lead) => (
                 <div
                   key={lead.id}
-                  className="kanban-card"
+                  className={`kanban-card ${draggedLead?.id === lead.id ? 'dragging' : ''}`}
                   draggable
-                  onDragStart={() => handleDragStart(lead)}
+                  onDragStart={(e) => handleDragStart(e, lead)}
+                  onDragEnd={handleDragEnd}
                 >
                   <div className="kanban-card-header">
                     <h4>{lead.name}</h4>
