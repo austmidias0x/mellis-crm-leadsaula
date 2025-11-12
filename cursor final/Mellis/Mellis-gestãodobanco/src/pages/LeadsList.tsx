@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Search, Download, Filter, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, Download, Filter, ChevronLeft, ChevronRight, X, Plus, UserPlus, Upload } from 'lucide-react';
 import { api } from '../services/api';
 import type { LeadsFilters } from '../types/lead';
+import CreateLeadModal from '../components/CreateLeadModal';
+import CreateSellerModal from '../components/CreateSellerModal';
+import LeadDetailModal from '../components/LeadDetailModal';
+import ImportCsvModal from '../components/ImportCsvModal';
 import './LeadsList.css';
 
 export default function LeadsList() {
@@ -14,10 +18,19 @@ export default function LeadsList() {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isCreateLeadModalOpen, setIsCreateLeadModalOpen] = useState(false);
+  const [isCreateSellerModalOpen, setIsCreateSellerModalOpen] = useState(false);
+  const [isImportCsvModalOpen, setIsImportCsvModalOpen] = useState(false);
+  const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['leads', filters],
     queryFn: () => api.leads.getAll(filters),
+  });
+
+  const { data: sellers } = useQuery({
+    queryKey: ['sellers'],
+    queryFn: () => api.sellers.getAll(true),
   });
 
   const handleSearch = (search: string) => {
@@ -83,12 +96,33 @@ export default function LeadsList() {
             )}
           </button>
           <button
-            className="btn btn-primary"
+            className="btn btn-secondary"
+            onClick={() => setIsCreateSellerModalOpen(true)}
+          >
+            <UserPlus size={18} />
+            Novo Vendedor
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setIsImportCsvModalOpen(true)}
+          >
+            <Upload size={18} />
+            Importar CSV
+          </button>
+          <button
+            className="btn btn-secondary"
             onClick={handleExportCsv}
             disabled={isExporting}
           >
             <Download size={18} />
             {isExporting ? 'Exportando...' : 'Exportar CSV'}
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsCreateLeadModalOpen(true)}
+          >
+            <Plus size={18} />
+            Novo Lead
           </button>
         </div>
       </div>
@@ -170,6 +204,46 @@ export default function LeadsList() {
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
               />
             </div>
+            <div className="filter-group">
+              <label>Status</label>
+              <select
+                value={filters.status || ''}
+                onChange={(e) => handleFilterChange('status', e.target.value)}
+              >
+                <option value="">Todos</option>
+                <option value="novo">Novo</option>
+                <option value="contato">Em Contato</option>
+                <option value="qualificado">Qualificado</option>
+                <option value="negociacao">Negociação</option>
+                <option value="fechado">Fechado</option>
+                <option value="perdido">Perdido</option>
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>Vendedor</label>
+              <select
+                value={filters.seller_id || ''}
+                onChange={(e) => handleFilterChange('seller_id', e.target.value)}
+              >
+                <option value="">Todos</option>
+                {sellers?.map(seller => (
+                  <option key={seller.id} value={seller.id}>
+                    {seller.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>Status de Cliente</label>
+              <select
+                value={filters.is_customer || ''}
+                onChange={(e) => handleFilterChange('is_customer', e.target.value)}
+              >
+                <option value="">Todos</option>
+                <option value="true">Já é cliente</option>
+                <option value="false">Não é cliente</option>
+              </select>
+            </div>
           </div>
           {activeFiltersCount > 0 && (
             <button className="btn btn-secondary" onClick={handleClearFilters}>
@@ -193,6 +267,8 @@ export default function LeadsList() {
                   <th>Profissão</th>
                   <th>Região</th>
                   <th>Dificuldade</th>
+                  <th>Vendedor</th>
+                  <th>Status Cliente</th>
                   <th>Data</th>
                 </tr>
               </thead>
@@ -200,7 +276,7 @@ export default function LeadsList() {
                 {data?.data.map((lead) => (
                   <tr
                     key={lead.id}
-                    onClick={() => navigate(`/leads/${lead.id}`)}
+                    onClick={() => setSelectedLeadId(lead.id)}
                     className="table-row-clickable"
                   >
                     <td className="font-medium">{lead.name}</td>
@@ -220,6 +296,22 @@ export default function LeadsList() {
                       <span className="badge badge-warning">
                         {lead.difficulty || 'N/A'}
                       </span>
+                    </td>
+                    <td>
+                      {lead.seller_id && sellers ? (
+                        <span className="badge badge-primary">
+                          {sellers.find(s => s.id === lead.seller_id)?.name || 'N/A'}
+                        </span>
+                      ) : (
+                        <span className="badge badge-secondary">Sem vendedor</span>
+                      )}
+                    </td>
+                    <td>
+                      {lead.is_customer ? (
+                        <span className="badge badge-success">✓ Cliente</span>
+                      ) : (
+                        <span className="badge badge-secondary">-</span>
+                      )}
                     </td>
                     <td className="text-secondary">
                       {formatDate(lead.created_at)}
@@ -255,6 +347,29 @@ export default function LeadsList() {
             </div>
           )}
         </>
+      )}
+
+      <CreateLeadModal 
+        isOpen={isCreateLeadModalOpen} 
+        onClose={() => setIsCreateLeadModalOpen(false)} 
+      />
+      
+      <CreateSellerModal 
+        isOpen={isCreateSellerModalOpen} 
+        onClose={() => setIsCreateSellerModalOpen(false)} 
+      />
+      
+      <ImportCsvModal 
+        isOpen={isImportCsvModalOpen} 
+        onClose={() => setIsImportCsvModalOpen(false)} 
+      />
+      
+      {selectedLeadId && (
+        <LeadDetailModal 
+          isOpen={!!selectedLeadId} 
+          onClose={() => setSelectedLeadId(null)} 
+          leadId={selectedLeadId} 
+        />
       )}
     </div>
   );

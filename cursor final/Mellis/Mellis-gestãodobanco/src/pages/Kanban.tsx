@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Mail, Phone, User, MapPin, Calendar } from 'lucide-react';
+import { Mail, Phone, User, MapPin, Calendar, Plus, UserPlus, Filter } from 'lucide-react';
 import { api } from '../services/api';
-import type { Lead } from '../types/lead';
+import type { Lead, LeadsFilters } from '../types/lead';
+import CreateLeadModal from '../components/CreateLeadModal';
+import CreateSellerModal from '../components/CreateSellerModal';
+import LeadDetailModal from '../components/LeadDetailModal';
 import './Kanban.css';
 
 const KANBAN_COLUMNS = [
@@ -18,10 +21,20 @@ export default function Kanban() {
   const queryClient = useQueryClient();
   const [draggedLead, setDraggedLead] = useState<Lead | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const [isCreateLeadModalOpen, setIsCreateLeadModalOpen] = useState(false);
+  const [isCreateSellerModalOpen, setIsCreateSellerModalOpen] = useState(false);
+  const [selectedLeadId, setSelectedLeadId] = useState<number | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<LeadsFilters>({});
 
   const { data, isLoading } = useQuery({
-    queryKey: ['leads', { limit: 1000 }],
-    queryFn: () => api.leads.getAll({ limit: 1000 }),
+    queryKey: ['leads', { ...filters, limit: 1000 }],
+    queryFn: () => api.leads.getAll({ ...filters, limit: 1000 }),
+  });
+
+  const { data: sellers } = useQuery({
+    queryKey: ['sellers'],
+    queryFn: () => api.sellers.getAll(true),
   });
 
   const updateStatusMutation = useMutation({
@@ -90,6 +103,18 @@ export default function Kanban() {
     });
   };
 
+  const handleFilterChange = (key: keyof LeadsFilters, value: string) => {
+    setFilters({ ...filters, [key]: value || undefined });
+  };
+
+  const handleClearFilters = () => {
+    setFilters({});
+  };
+
+  const activeFiltersCount = Object.keys(filters).filter(
+    key => filters[key as keyof LeadsFilters]
+  ).length;
+
   if (isLoading) {
     return (
       <div className="page">
@@ -104,11 +129,102 @@ export default function Kanban() {
   return (
     <div className="page kanban-page">
       <div className="page-header">
-        <h1 className="page-title">Kanban</h1>
-        <p className="page-subtitle">
-          {data?.pagination.total || 0} leads no total
-        </p>
+        <div>
+          <h1 className="page-title">Kanban</h1>
+          <p className="page-subtitle">
+            {data?.pagination.total || 0} leads no total
+          </p>
+        </div>
+        <div className="page-actions">
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter size={18} />
+            Filtros
+            {activeFiltersCount > 0 && (
+              <span className="badge">{activeFiltersCount}</span>
+            )}
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setIsCreateSellerModalOpen(true)}
+          >
+            <UserPlus size={18} />
+            Novo Vendedor
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsCreateLeadModalOpen(true)}
+          >
+            <Plus size={18} />
+            Novo Lead
+          </button>
+        </div>
       </div>
+
+      {showFilters && (
+        <div className="filters-panel">
+          <div className="filters-grid">
+            <div className="filter-group">
+              <label>Vendedor</label>
+              <select
+                value={filters.seller_id || ''}
+                onChange={(e) => handleFilterChange('seller_id', e.target.value)}
+              >
+                <option value="">Todos</option>
+                {sellers?.map(seller => (
+                  <option key={seller.id} value={seller.id}>
+                    {seller.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>Status de Cliente</label>
+              <select
+                value={filters.is_customer || ''}
+                onChange={(e) => handleFilterChange('is_customer', e.target.value)}
+              >
+                <option value="">Todos</option>
+                <option value="true">Já é cliente</option>
+                <option value="false">Não é cliente</option>
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>Profissão</label>
+              <select
+                value={filters.profession || ''}
+                onChange={(e) => handleFilterChange('profession', e.target.value)}
+              >
+                <option value="">Todas</option>
+                <option value="veterinario">Veterinário</option>
+                <option value="tecnico">Técnico</option>
+                <option value="dono">Dono</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+            <div className="filter-group">
+              <label>Região</label>
+              <select
+                value={filters.region || ''}
+                onChange={(e) => handleFilterChange('region', e.target.value)}
+              >
+                <option value="">Todas</option>
+                <option value="serra">Serra</option>
+                <option value="poa">Porto Alegre</option>
+                <option value="interior">Interior</option>
+                <option value="outros-estados">Outros Estados</option>
+              </select>
+            </div>
+          </div>
+          {activeFiltersCount > 0 && (
+            <button className="btn btn-secondary btn-clear-filters" onClick={handleClearFilters}>
+              Limpar Filtros
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="kanban-board">
         {KANBAN_COLUMNS.map((column) => (
@@ -133,6 +249,7 @@ export default function Kanban() {
                   draggable
                   onDragStart={(e) => handleDragStart(e, lead)}
                   onDragEnd={handleDragEnd}
+                  onClick={() => setSelectedLeadId(lead.id)}
                 >
                   <div className="kanban-card-header">
                     <h4>{lead.name}</h4>
@@ -165,13 +282,25 @@ export default function Kanban() {
                     )}
                   </div>
 
-                  {lead.difficulty && (
-                    <div className="kanban-card-footer">
-                      <span className="badge badge-warning">
-                        {lead.difficulty}
-                      </span>
+                  <div className="kanban-card-footer">
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {lead.difficulty && (
+                        <span className="badge badge-warning">
+                          {lead.difficulty}
+                        </span>
+                      )}
+                      {lead.seller_id && sellers && (
+                        <span className="badge badge-primary" title="Vendedor">
+                          👤 {sellers.find(s => s.id === lead.seller_id)?.name || 'Vendedor'}
+                        </span>
+                      )}
+                      {lead.is_customer && (
+                        <span className="badge badge-success" title="Já é cliente">
+                          ⭐ Cliente
+                        </span>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
 
@@ -184,6 +313,24 @@ export default function Kanban() {
           </div>
         ))}
       </div>
+
+      <CreateLeadModal 
+        isOpen={isCreateLeadModalOpen} 
+        onClose={() => setIsCreateLeadModalOpen(false)} 
+      />
+      
+      <CreateSellerModal 
+        isOpen={isCreateSellerModalOpen} 
+        onClose={() => setIsCreateSellerModalOpen(false)} 
+      />
+      
+      {selectedLeadId && (
+        <LeadDetailModal 
+          isOpen={!!selectedLeadId} 
+          onClose={() => setSelectedLeadId(null)} 
+          leadId={selectedLeadId} 
+        />
+      )}
     </div>
   );
 }

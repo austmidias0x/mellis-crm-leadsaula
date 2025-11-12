@@ -108,6 +108,54 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+
+        {stats?.bySeller && Object.keys(stats.bySeller).length > 0 && (
+          <div className="chart-card">
+            <h3 className="chart-title">Leads por Vendedor</h3>
+            <div className="chart-content">
+              {Object.entries(stats.bySeller).map(([seller, count]) => (
+                <div key={seller} className="chart-item">
+                  <span className="chart-label">{seller || 'Não informado'}</span>
+                  <div className="chart-bar-wrapper">
+                    <div 
+                      className="chart-bar" 
+                      style={{ width: `${(count / (stats?.total || 1)) * 100}%` }}
+                    />
+                    <span className="chart-value">{count}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {stats?.byCustomerStatus && (
+          <div className="chart-card">
+            <h3 className="chart-title">Status de Cliente</h3>
+            <div className="chart-content">
+              <div className="chart-item">
+                <span className="chart-label">Já são clientes</span>
+                <div className="chart-bar-wrapper">
+                  <div 
+                    className="chart-bar chart-bar--success" 
+                    style={{ width: `${stats.total > 0 ? (stats.byCustomerStatus.customers / stats.total) * 100 : 0}%` }}
+                  />
+                  <span className="chart-value">{stats.byCustomerStatus.customers || 0}</span>
+                </div>
+              </div>
+              <div className="chart-item">
+                <span className="chart-label">Não são clientes</span>
+                <div className="chart-bar-wrapper">
+                  <div 
+                    className="chart-bar" 
+                    style={{ width: `${stats.total > 0 ? (stats.byCustomerStatus.nonCustomers / stats.total) * 100 : 0}%` }}
+                  />
+                  <span className="chart-value">{stats.byCustomerStatus.nonCustomers || 0}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

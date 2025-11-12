@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import leadsRoutes from './routes/leads.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import sellersRoutes from './routes/sellers.routes.js';
 import { authenticateToken } from './middleware/auth.middleware.js';
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/leads', authenticateToken, leadsRoutes);
+app.use('/api/sellers', authenticateToken, sellersRoutes);
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

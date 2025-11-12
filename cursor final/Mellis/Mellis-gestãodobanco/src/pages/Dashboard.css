@@ -79,6 +79,10 @@
   background: var(--danger);
 }
 
+.chart-bar--success {
+  background: var(--success);
+}
+
 .chart-value {
   min-width: 2rem;
   font-weight: 600;

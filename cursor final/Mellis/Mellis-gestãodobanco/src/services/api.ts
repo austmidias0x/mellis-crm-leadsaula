@@ -1,4 +1,4 @@
-import type { Lead, LeadsResponse, LeadsStats, LeadsFilters } from '../types/lead';
+import type { Lead, LeadsResponse, LeadsStats, LeadsFilters, Seller, CreateLeadData, UpdateLeadData } from '../types/lead';
 
 const API_BASE_URL = '/api';
 
@@ -117,6 +117,86 @@ export const api = {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+    },
+
+    create: async (data: CreateLeadData): Promise<Lead> => {
+      const response = await fetch(`${API_BASE_URL}/leads`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to create lead');
+      return response.json();
+    },
+
+    update: async (id: number, data: UpdateLeadData): Promise<Lead> => {
+      const response = await fetch(`${API_BASE_URL}/leads/${id}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to update lead');
+      return response.json();
+    },
+
+    importCsv: async (csvData: string): Promise<{ success: boolean; imported: number; errors: string[]; message: string }> => {
+      const response = await fetch(`${API_BASE_URL}/leads/import/csv`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ csvData }),
+      });
+      if (!response.ok) throw new Error('Failed to import CSV');
+      return response.json();
+    },
+  },
+
+  sellers: {
+    getAll: async (activeOnly: boolean = false): Promise<Seller[]> => {
+      const params = new URLSearchParams();
+      if (activeOnly) {
+        params.append('active', 'true');
+      }
+      const response = await fetch(`${API_BASE_URL}/sellers?${params}`, {
+        headers: getAuthHeaders(),
+      });
+      if (!response.ok) throw new Error('Failed to fetch sellers');
+      return response.json();
+    },
+
+    getById: async (id: number): Promise<Seller> => {
+      const response = await fetch(`${API_BASE_URL}/sellers/${id}`, {
+        headers: getAuthHeaders(),
+      });
+      if (!response.ok) throw new Error('Failed to fetch seller');
+      return response.json();
+    },
+
+    create: async (data: Omit<Seller, 'id' | 'created_at' | 'updated_at'>): Promise<Seller> => {
+      const response = await fetch(`${API_BASE_URL}/sellers`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to create seller');
+      return response.json();
+    },
+
+    update: async (id: number, data: Partial<Omit<Seller, 'id' | 'created_at' | 'updated_at'>>): Promise<Seller> => {
+      const response = await fetch(`${API_BASE_URL}/sellers/${id}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to update seller');
+      return response.json();
+    },
+
+    delete: async (id: number): Promise<void> => {
+      const response = await fetch(`${API_BASE_URL}/sellers/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      if (!response.ok) throw new Error('Failed to delete seller');
     },
   },
 };

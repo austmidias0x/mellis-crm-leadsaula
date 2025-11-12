@@ -7,6 +7,9 @@ export interface Lead {
   difficulty?: string | null;
   region?: string | null;
   status?: string | null;
+  seller_id?: number | null;
+  is_customer?: boolean;
+  notes?: string | null;
   utm_source?: string | null;
   utm_medium?: string | null;
   utm_campaign?: string | null;
@@ -35,6 +38,45 @@ export interface LeadsStats {
   byDifficulty: Record<string, number>;
   byRegion: Record<string, number>;
   recentLeads: number;
+  bySeller?: Record<string, number>;
+  byCustomerStatus?: { customers: number; nonCustomers: number };
+}
+
+export interface Seller {
+  id: number;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateLeadData {
+  name: string;
+  email: string;
+  whatsapp: string;
+  profession?: string;
+  difficulty?: string;
+  region?: string;
+  status?: string;
+  seller_id?: number;
+  is_customer?: boolean;
+  notes?: string;
+  lgpd_consent: boolean;
+}
+
+export interface UpdateLeadData {
+  name?: string;
+  email?: string;
+  whatsapp?: string;
+  profession?: string;
+  difficulty?: string;
+  region?: string;
+  status?: string;
+  seller_id?: number;
+  is_customer?: boolean;
+  notes?: string;
 }
 
 export interface LeadsFilters {
@@ -43,6 +85,9 @@ export interface LeadsFilters {
   difficulty?: string;
   region?: string;
   utm_campaign?: string;
+  seller_id?: string;
+  is_customer?: string;
+  status?: string;
   dateFrom?: string;
   dateTo?: string;
   page?: number;
